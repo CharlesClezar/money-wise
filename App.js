@@ -15,7 +15,7 @@ export default function App() {
   return (
   <NavigationContainer>
     <Stack.Navigator initialRouteName="Login">
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Login" component={Login} options={{headerMode: 'none'}}/>
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="Home" component={Home} options={{headerMode: 'none'}}/>
       <Stack.Screen name="AdicionarLancamento" component={AdicionarLancamento} options={{headerMode: 'none'}}/>

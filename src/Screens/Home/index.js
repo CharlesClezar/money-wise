@@ -1,26 +1,18 @@
 // screens/HomeScreen.js
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
+import Icon  from 'react-native-vector-icons/MaterialIcons';
+import TopMenuBar from '../../../components/Menu/Menu';
 
 export default function Home ({ navigation }) {
+  const [userName, setUserName] = useState('');
+
   return (
     <View style={styles.container}>
+      <TopMenuBar />
       <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
-          <Image 
-            source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
-            style={styles.menuIcon}
-          />
-        </TouchableOpacity>
-        <Text style={styles.title}>MONEYWISE</Text>
-        <TouchableOpacity style={styles.searchButton}>
-          <Image 
-            source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
-            style={styles.searchIcon}
-          />
-        </TouchableOpacity>
+        <Image source={{uri: 'https://i.ibb.co/cvfp0PW/Captura-de-tela-2024-06-23-160856.png'}} style={styles.header}/>
       </View>
 
       <View style={styles.userInfo}>
@@ -28,7 +20,10 @@ export default function Home ({ navigation }) {
           source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
           style={styles.userIcon}
         />
-        <Text style={styles.userName}>OLÁ, JOÃO</Text>
+        <Text style={styles.userName}>
+          OLÁ, <Text style={styles.userName2}>JOAO NOME TESTE.</Text>
+        </Text>
+
       </View>
 
       <View style={styles.balanceContainer}>
@@ -38,24 +33,23 @@ export default function Home ({ navigation }) {
         </View>
       </View>
 
-      <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText} onPress={() => navigation.navigate('AdicionarLancamento')}>+</Text>
-      </TouchableOpacity>
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Image 
-            source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
-            style={styles.footerIcon}
-          />
+          <Icon name="home" size={30} color="#C8E6C9"/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Extrato')}>
-          <Image 
-            source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
-            style={styles.footerIcon}
-          />
+        
+        <View style={styles.footerButton}>
+          <TouchableOpacity style={styles.addButton}>
+            <Icon name="add" size={30} color="#FFF" onPress={() => navigation.navigate('AdicionarLancamento')}/>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.footerButton}>
+          <Icon name="paid" size={30} color="#C8E6C9" onPress={() => navigation.navigate('Extrato')}/>
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -63,22 +57,18 @@ export default function Home ({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   header: {
-    width: '100%',
-    paddingTop: 40,
-    paddingBottom: 10,
-    backgroundColor: '#E0E0E0',
-    flexDirection: 'row',
+    width: '70%',
+    paddingTop: 20,
+    paddingBottom: 20,
+    backgroundColor: '#FFFFFF',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 15,
-  },
-  menuButton: {
-    padding: 10,
   },
   menuIcon: {
     width: 24,
@@ -87,7 +77,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#009688',
+    color: '#00C853',
   },
   searchButton: {
     padding: 10,
@@ -113,56 +103,56 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 10,
   },
+  userName2: {
+    fontSize: 20,
+    color: '#000',
+    marginTop: 10,
+    fontWeight: 'bold',
+  },
   balanceContainer: {
     alignItems: 'center',
     marginTop: 30,
   },
   balanceText: {
     fontSize: 18,
-    color: '#000',
+    color: '#00C853',
+    fontWeight: 'bold',
   },
   balanceBox: {
     marginTop: 10,
     padding: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
-    width: '80%',
+    width: 300,
     alignItems: 'center',
-    elevation: 3,
+    justifyContent: 'center',
+    elevation: 1,
+    flexDirection: 'row',
   },
   balanceAmount: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#000',
   },
-  addButton: {
-    backgroundColor: '#00C853',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 80,
-  },
-  addButtonText: {
-    fontSize: 36,
-    color: '#FFF',
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    paddingVertical: 20,
+    paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: '#E0E0E0',
-    backgroundColor: '#FFF',
+    backgroundColor: '#8F8E8E',
+  },
+  addButton: {
+    backgroundColor: '#00C853',
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: 0,
   },
   footerButton: {
     alignItems: 'center',
-  },
-  footerIcon: {
-    width: 30,
-    height: 30,
   },
 });

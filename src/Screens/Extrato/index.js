@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
+import Icon  from 'react-native-vector-icons/MaterialIcons';
 
 const data = [
   { id: '1', type: 'income', value: '50,00' },
@@ -40,29 +41,23 @@ export default function Extrato ({ navigation }) {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.list}
       />
-      <TouchableOpacity style={styles.fab}>
-        <Text style={styles.fabIcon}>+</Text>
-      </TouchableOpacity>
+
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Image
-            source={{ uri: 'https://example.com/home_icon.png' }}
-            style={styles.footerIcon}
-          />
+          <Icon name="home" size={30} color="#C8E6C9" />
         </TouchableOpacity>
+        
+        <View style={styles.footerButton}>
+          <TouchableOpacity style={styles.addButton}>
+            <Icon name="add" size={30} color="#FFF" />
+          </TouchableOpacity>
+        </View>
+
         <TouchableOpacity style={styles.footerButton}>
-          <Image
-            source={{ uri: 'https://example.com/chart_icon.png' }}
-            style={styles.footerIcon}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
-          <Image
-            source={{ uri: 'https://example.com/settings_icon.png' }}
-            style={styles.footerIcon}
-          />
+          <Icon name="paid" size={30} color="#C8E6C9" />
         </TouchableOpacity>
       </View>
+
     </View>
   );
 };
@@ -128,16 +123,22 @@ const styles = StyleSheet.create({
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    width: '100%',
     paddingVertical: 10,
     borderTopWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#E0E0E0',
+    backgroundColor: '#FFF',
+  },
+  addButton: {
+    backgroundColor: '#00C853',
+    width: 40,
+    height: 40,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: 0,
   },
   footerButton: {
     alignItems: 'center',
-  },
-  footerIcon: {
-    width: 30,
-    height: 30,
-    resizeMode: 'contain',
   },
 });

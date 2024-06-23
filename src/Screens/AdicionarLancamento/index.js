@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import Icon  from 'react-native-vector-icons/MaterialIcons';
 
 export default function AdicionarLancamento ({ navigation }) {
   const [description, setDescription] = useState('');
@@ -41,6 +42,17 @@ export default function AdicionarLancamento ({ navigation }) {
       <TouchableOpacity style={styles.addButton}>
         <Text style={styles.addButtonText}>Adicionar</Text>
       </TouchableOpacity>
+
+      <View style={styles.footer}>
+        <TouchableOpacity style={styles.footerButton}>
+          <Icon name="home" size={30} color="#C8E6C9" />
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.footerButton}>
+          <Icon name="paid" size={30} color="#C8E6C9" />
+        </TouchableOpacity>
+      </View>
+
     </View>
   );
 };
@@ -48,6 +60,7 @@ export default function AdicionarLancamento ({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'space-between',
     padding: 20,
     backgroundColor: '#fff',
   },
@@ -97,5 +110,17 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderColor: '#E0E0E0',
+    backgroundColor: '#FFF',
+  },
+  footerButton: {
+    alignItems: 'center',
   },
 });
