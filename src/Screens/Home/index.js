@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'reac
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Home = () => {
+export default function Home ({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -39,7 +39,7 @@ const Home = () => {
       </View>
 
       <TouchableOpacity style={styles.addButton}>
-        <Text style={styles.addButtonText}>+</Text>
+        <Text style={styles.addButtonText} onPress={() => navigation.navigate('AdicionarLancamento')}>+</Text>
       </TouchableOpacity>
 
       <View style={styles.footer}>
@@ -49,7 +49,7 @@ const Home = () => {
             style={styles.footerIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity style={styles.footerButton} onPress={() => navigation.navigate('Extrato')}>
           <Image 
             source={{uri: 'https://img.ibxk.com.br/materias/5866/21577.jpg?w=700'}} // Altere para o URL do ícone correto
             style={styles.footerIcon}
@@ -166,6 +166,3 @@ const styles = StyleSheet.create({
     height: 30,
   },
 });
-
-
-export default Home;

@@ -6,6 +6,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./src/Screens/Login";
 import SignUp from "./src/Screens/SingUp";
 import Home from "./src/Screens/Home";
+import AdicionarLancamento from "./src/Screens/AdicionarLancamento";
+import Extrato from "./src/Screens/Extrato";
 
 const Stack = createStackNavigator();
 
@@ -16,6 +18,8 @@ export default function App() {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="SignUp" component={SignUp} />
       <Stack.Screen name="Home" component={Home} options={{headerMode: 'none'}}/>
+      <Stack.Screen name="AdicionarLancamento" component={AdicionarLancamento} options={{headerMode: 'none'}}/>
+      <Stack.Screen name="Extrato" component={Extrato} options={{headerMode: 'none'}}/>
     </Stack.Navigator>
   </NavigationContainer>
   );
