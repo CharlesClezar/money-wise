@@ -1,12 +1,29 @@
 // screens/HomeScreen.js
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, StatusBar } from 'react-native';
+import { openDB, selecionaSaldo } from '../../../db'; 
 import Icon  from 'react-native-vector-icons/MaterialIcons';
 import TopMenuBar from '../../../components/Menu/Menu';
 
 export default function Home ({ navigation }) {
-  const [userName, setUserName] = useState('');
+  const [saldo, setSaldo] = useState(0);
+
+  const fetchSaldo = async () => {
+    const db = await openDB();
+    const saldoAtual = await selecionaSaldo(db);
+    setSaldo(saldoAtual);
+  };
+
+  useEffect(() => {
+    fetchSaldo();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      fetchSaldo();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -21,7 +38,7 @@ export default function Home ({ navigation }) {
           style={styles.userIcon}
         />
         <Text style={styles.userName}>
-          OLÁ, <Text style={styles.userName2}>JOAO NOME TESTE.</Text>
+          Olá, seja bem vindo!
         </Text>
 
       </View>
@@ -29,10 +46,13 @@ export default function Home ({ navigation }) {
       <View style={styles.balanceContainer}>
         <Text style={styles.balanceText}>SEU SALDO ATUAL É:</Text>
         <View style={styles.balanceBox}>
-          <Text style={styles.balanceAmount}>0,00 $</Text>
+          <Text style={styles.balanceAmount}>{saldo.toFixed(2)} $</Text>
         </View>
       </View>
 
+      <TouchableOpacity style={styles.categoryButton} onPress={() => navigation.navigate('Categoria')}>
+        <Text style={styles.categoryButtonText}>Adicionar Categoria</Text>
+      </TouchableOpacity>
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
@@ -103,12 +123,6 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 10,
   },
-  userName2: {
-    fontSize: 20,
-    color: '#000',
-    marginTop: 10,
-    fontWeight: 'bold',
-  },
   balanceContainer: {
     alignItems: 'center',
     marginTop: 30,
@@ -154,5 +168,16 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     alignItems: 'center',
+  },
+  categoryButton: {
+    marginTop: 20,
+    backgroundColor: '#009688',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  categoryButtonText: {
+    color: '#FFF',
+    fontSize: 16,
   },
 });

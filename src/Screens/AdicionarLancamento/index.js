@@ -1,23 +1,70 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import Icon  from 'react-native-vector-icons/MaterialIcons';
+import { openDB, insertExtrato, fetchCategorias } from '../../../db'; 
 
 export default function AdicionarLancamento ({ navigation }) {
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
+  const [amount, setAmount] = useState('');
+  const [selectedType, setSelectedType] = useState('Receita');
+  const [categorias, setCategorias] = useState([]); 
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const loadCategorias = async () => {
+        const db = await openDB();
+        const fetchedCategorias = await fetchCategorias(db);
+        const formattedCategorias = fetchedCategorias.map(categoria => ({
+          label: categoria.nome,
+          value: categoria.idcategoria
+        }));
+        setCategorias(formattedCategorias);
+    };
+
+    loadCategorias();
+  }, []); // Chama apenas uma vez no carregamento inicial
+
+  const handleInsert = async () => {
+    if (!description || !selectedCategory || !amount || !selectedType) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos e selecione o tipo (Despesa ou Receita).');
+      return;
+    }
+
+    const db = await openDB();
+    const currentDate = new Date().toISOString();
+    await insertExtrato(db, description, selectedType, selectedCategory, currentDate, parseFloat(amount));
+    Alert.alert('Sucesso', 'Lançamento adicionado com sucesso.');
+    navigation.goBack(); // Navega de volta após a inserção
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.expenseButton}>
-          <Text style={styles.buttonText}>Despesa</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.incomeButton}>
+        <TouchableOpacity
+          style={[styles.incomeButton, selectedType === 'Receita' ? styles.selectedButton : styles.disabledButton]}
+          onPress={() => setSelectedType('Receita')}
+          disabled={selectedType === 'Receita'} 
+        >
           <Text style={styles.buttonText}>Receita</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.expenseButton, selectedType === 'Despesa' ? styles.selectedButton : styles.disabledButton]}
+          onPress={() => setSelectedType('Despesa')}
+          disabled={selectedType === 'Despesa'} 
+        >
+          <Text style={styles.buttonText}>Despesa</Text>
+        </TouchableOpacity>
       </View>
-      <Text style={styles.amount}>0,00 $</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="VALOR"
+        placeholderTextColor="#4CAF50"
+        value={amount}
+        onChangeText={setAmount}
+        keyboardType="numeric"
+      />
       <TextInput
         style={styles.input}
         placeholder="DESCRIÇÃO"
@@ -25,31 +72,36 @@ export default function AdicionarLancamento ({ navigation }) {
         value={description}
         onChangeText={setDescription}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="CATEGORIA"
-        placeholderTextColor="#4CAF50"
-        value={category}
-        onChangeText={setCategory}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="DATA"
-        placeholderTextColor="#4CAF50"
-        value={date}
-        onChangeText={setDate}
-      />
-      <TouchableOpacity style={styles.addButton}>
+      <View style={styles.pickerContainer}>
+        <Text style={styles.pickerLabel}>Selecione a Categoria:</Text>
+        <DropDownPicker
+          open={open}
+          value={selectedCategory}
+          items={categorias}
+          setOpen={setOpen}
+          setValue={setSelectedCategory}
+          setItems={setCategorias}
+          placeholder="Selecione uma categoria..."
+          containerStyle={{ height: 40, marginBottom: 10 }}
+          style={{ backgroundColor: '#fafafa' }}
+          itemStyle={{
+            justifyContent: 'flex-start',
+          }}
+          dropDownStyle={{ backgroundColor: '#fafafa' }}
+        />
+      </View>
+
+      <TouchableOpacity style={styles.addButton} onPress={handleInsert}>
         <Text style={styles.addButtonText}>Adicionar</Text>
       </TouchableOpacity>
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Icon name="home" size={30} color="#C8E6C9" />
+          <Icon name="home" size={30} color="#C8E6C9" onPress={() => navigation.navigate('Home')}/>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.footerButton}>
-          <Icon name="paid" size={30} color="#C8E6C9" />
+          <Icon name="paid" size={30} color="#C8E6C9" onPress={() => navigation.navigate('Extrato')}/>
         </TouchableOpacity>
       </View>
 
@@ -87,12 +139,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  amount: {
-    fontSize: 30,
-    color: '#4CAF50',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
   input: {
     height: 40,
     borderColor: '#4CAF50',
@@ -122,5 +168,18 @@ const styles = StyleSheet.create({
   },
   footerButton: {
     alignItems: 'center',
+  },
+  pickerContainer: {
+    marginBottom: 20,
+  },
+  pickerLabel: {
+    color: '#4CAF50',
+    marginBottom: 5,
+  },
+  selectedButton: {
+    opacity: 1, // Botão selecionado com opacidade total
+  },
+  disabledButton: {
+    opacity: 0.3, // Botão desativado com opacidade reduzida
   },
 });

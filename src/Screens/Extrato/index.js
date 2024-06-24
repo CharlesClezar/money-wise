@@ -1,24 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
 import Icon  from 'react-native-vector-icons/MaterialIcons';
-
-const data = [
-  { id: '1', type: 'income', value: '50,00' },
-  { id: '2', type: 'expense', value: '30,00' },
-  { id: '3', type: 'expense', value: '20,00' },
-  { id: '4', type: 'income', value: '100,00' },
-];
+import { openDB, fetchExtratos, deleteExtrato } from '../../../db';
 
 export default function Extrato ({ navigation }) {
+  const [extratos, setExtratos] = useState([]);
+
+  const loadExtratos = async () => {
+    const db = await openDB();
+    const extratosData = await fetchExtratos(db);
+    setExtratos(extratosData);
+  };
+
+  useEffect(() => {
+    loadExtratos();
+  }, []);
+
+  const handleDelete = async (id) => {
+    const db = await openDB();
+    await deleteExtrato(db, id);
+    loadExtratos();
+  };
+
+  const confirmDelete = (id) => {
+    Alert.alert(
+      'Confirmar Exclusão',
+      'Você tem certeza que deseja excluir este extrato?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'OK', onPress: () => handleDelete(id) },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View
         style={[
           styles.bar,
-          { backgroundColor: item.type === 'income' ? '#2196F3' : '#F44336' },
+          { backgroundColor: item.tipo === 'Receita' ? '#2196F3' : '#F44336' },
         ]}
       />
-      <Text style={styles.itemText}>{item.value}</Text>
+      <Text style={styles.itemText}>{item.valor.toFixed(2)} $</Text>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => confirmDelete(item.idextrato)}
+      >
+        <Text style={styles.deleteButtonText}>Excluir</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -36,20 +66,20 @@ export default function Extrato ({ navigation }) {
         />
       </View>
       <FlatList
-        data={data}
+        data={extratos}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.idextrato.toString()}
         contentContainerStyle={styles.list}
       />
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Icon name="home" size={30} color="#C8E6C9" />
+          <Icon name="home" size={30} color="#C8E6C9" onPress={() => navigation.navigate('Home')}/>
         </TouchableOpacity>
         
         <View style={styles.footerButton}>
           <TouchableOpacity style={styles.addButton}>
-            <Icon name="add" size={30} color="#FFF" />
+            <Icon name="add" size={30} color="#FFF" onPress={() => navigation.navigate('AdicionarLancamento')}/>
           </TouchableOpacity>
         </View>
 
