@@ -171,4 +171,13 @@ const styles = StyleSheet.create({
   footerButton: {
     alignItems: 'center',
   },
+  deleteButtonText: {
+    color: '#fff',
+  },
+  deleteButton: {
+    marginLeft: 10,
+    padding: 5,
+    backgroundColor: '#FF4500',
+    borderRadius: 5,
+  },
 });
