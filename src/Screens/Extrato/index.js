@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, FlatList, Alert } from 'react-native';
 import Icon  from 'react-native-vector-icons/MaterialIcons';
 import { openDB, fetchExtratos, deleteExtrato } from '../../../db';
 
